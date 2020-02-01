@@ -17,6 +17,14 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "monaco-editor": [
+        "dist/monaco-editor"
+      ],
+      "monaco-editor/*": [
+        "dist/monaco-editor/*"
+      ]
+    }
   }
 }
