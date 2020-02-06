@@ -1,7 +1,7 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { EditorState } from './editor-state';
+import { editorState } from './editor-state';
 import { MonacoEditorComponent } from './monaco-editor.component';
 import { MonacoEditorConfig, MONACO_EDITOR_CONFIG } from './config';
 
@@ -12,7 +12,7 @@ import { MonacoEditorConfig, MONACO_EDITOR_CONFIG } from './config';
 })
 export class MonacoEditorModule {
   public static forRoot(config: MonacoEditorConfig = {}): ModuleWithProviders<MonacoEditorModule> {
-    EditorState.loadedMonaco = new Promise<void>((resolve: any) => {
+    editorState.loadedMonaco = new Promise<void>((resolve: any) => {
       const baseUrl = config.baseUrl || './assets';
       const onGotAmdLoader = () => {
         // Load monaco
@@ -21,7 +21,7 @@ export class MonacoEditorModule {
           if (typeof config.onMonacoLoad === 'function') {
             config.onMonacoLoad((window as any).monaco);
           }
-          EditorState.monaco = (window as any).monaco;
+          editorState.monaco = (window as any).monaco;
           resolve();
         });
       };

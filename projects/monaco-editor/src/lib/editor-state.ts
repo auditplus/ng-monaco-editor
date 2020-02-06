@@ -1,7 +1,7 @@
-export class EditorState {
+export const editorState = {
 
-  static monaco: any;
+  monaco: undefined,
 
-  static loadedMonaco: Promise<any>;
+  loadedMonaco: undefined
 
-}
+};

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter, forwardRef, Inject, NgZone, Input } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
-import { EditorState } from './editor-state';
+import { editorState } from './editor-state';
 import { MonacoEditorConfig, MONACO_EDITOR_CONFIG } from './config';
 
 @Component({
@@ -55,7 +55,7 @@ export class MonacoEditorComponent implements OnInit, ControlValueAccessor {
   constructor(private zone: NgZone, @Inject(MONACO_EDITOR_CONFIG) private config: MonacoEditorConfig) { }
 
   ngOnInit() {
-    EditorState.loadedMonaco.then(() => {
+    editorState.loadedMonaco.then(() => {
       const options = (this.options) ? this.options : this.config;
       this.initMonaco(options);
     });
@@ -81,7 +81,7 @@ export class MonacoEditorComponent implements OnInit, ControlValueAccessor {
 
   protected initMonaco(options: any): void {
 
-    const monaco = EditorState.monaco;
+    const monaco = editorState.monaco;
     const hasModel = !!options.model;
 
     this.editor = monaco.editor.create(this.editorContainer.nativeElement, options);
