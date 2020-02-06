@@ -7,7 +7,4 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'monaco-editor-app';
-
-  editorOptions = {theme: 'vs-dark', language: 'html'};
-  code = 'function x() {\nconsole.log("Hello world!");\n}';
 }
