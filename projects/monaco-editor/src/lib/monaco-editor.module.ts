@@ -19,7 +19,7 @@ export class MonacoEditorModule {
         (window as any).require.config({ paths: {vs: `${baseUrl}/monaco/vs`} });
         (window as any).require(['vs/editor/editor.main'], () => {
           if (typeof config.onMonacoLoad === 'function') {
-            config.onMonacoLoad();
+            config.onMonacoLoad((window as any).monaco);
           }
           EditorState.monaco = (window as any).monaco;
           resolve();

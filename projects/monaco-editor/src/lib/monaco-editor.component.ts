@@ -5,7 +5,7 @@ import { EditorState } from './editor-state';
 import { MonacoEditorConfig, MONACO_EDITOR_CONFIG } from './config';
 
 @Component({
-  selector: 'monaco-editor',
+  selector: 'ng-monaco-editor',
   template: '<div class="editor-container" #container></div>',
   styles: [`
     :host {
@@ -27,13 +27,13 @@ export class MonacoEditorComponent implements OnInit, ControlValueAccessor {
 
   value = '';
 
-  private editor;
+  private editor: any;
 
-  private editorOptions;
+  private editorOptions: any;
 
   @ViewChild('container', {static: true}) editorContainer: ElementRef;
 
-  @Output() loaded: EventEmitter<void> = new EventEmitter<void>();
+  @Output() loaded: EventEmitter<any> = new EventEmitter<any>();
 
   onChanged = (_: any) => {};
 
@@ -52,15 +52,6 @@ export class MonacoEditorComponent implements OnInit, ControlValueAccessor {
     return this.editorOptions;
   }
 
-  @Input('model')
-  set model(model: any) {
-    this.options.model = model;
-    if (this.editor) {
-      this.editor.dispose();
-      this.initMonaco(this.options);
-    }
-  }
-
   constructor(private zone: NgZone, @Inject(MONACO_EDITOR_CONFIG) private config: MonacoEditorConfig) { }
 
   ngOnInit() {
@@ -69,11 +60,12 @@ export class MonacoEditorComponent implements OnInit, ControlValueAccessor {
       this.initMonaco(options);
     });
   }
+
   writeValue(value: any) {
     this.value = value || '';
     // Fix for value change while dispose in process.
     setTimeout(() => {
-      if (this.editor && !this.options.model) {
+      if (this.editor) {
         this.editor.setValue(this.value);
       }
     });
@@ -91,16 +83,6 @@ export class MonacoEditorComponent implements OnInit, ControlValueAccessor {
 
     const monaco = EditorState.monaco;
     const hasModel = !!options.model;
-
-    if (hasModel) {
-      const model = monaco.editor.getModel(options.model.uri || '');
-      if (model) {
-        options.model = model;
-        options.model.setValue(this.value);
-      } else {
-        options.model = monaco.editor.createModel(options.model.value, options.model.language, options.model.uri);
-      }
-    }
 
     this.editor = monaco.editor.create(this.editorContainer.nativeElement, options);
 
@@ -122,12 +104,7 @@ export class MonacoEditorComponent implements OnInit, ControlValueAccessor {
       this.onTouched();
     });
 
-    // refresh layout on resize event.
-    // if (this._windowResizeSubscription) {
-    //   this._windowResizeSubscription.unsubscribe();
-    // }
-    // this._windowResizeSubscription = fromEvent(window, 'resize').subscribe(() => this._editor.layout());
-    // this.onInit.emit(this._editor);
+    this.loaded.emit(this.editor);
   }
 
 }
