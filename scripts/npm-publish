@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#login into registry
+npm login
+
+npm publish ./dist/monaco-editor/ --access=public
+
+#logout when finished
+npm logout
+echo "Published successfully."

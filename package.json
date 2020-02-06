@@ -4,10 +4,15 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test",
+    "build": "ng build --project=monaco-editor-app --base-href=monaco-editor-app",
+    "build:prod": "ng build --prod --project=monaco-editor-app --base-href=monaco-editor-app",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "build-editor": "npm run copy:readme && ng build monaco-editor && npm run copy:types && npm run copy:editor",
+    "npm-publish": "npm run build-editor && bash scripts/npm-publish",
+    "copy:types": "cp node_modules/monaco-editor/monaco.d.ts dist/monaco-editor",
+    "copy:readme": "cp -rf README.md projects/monaco-editor/",
+    "copy:editor": "mkdir ./dist/monaco-editor/assets && cp -rf node_modules/monaco-editor/min dist/monaco-editor/assets/monaco"
   },
   "private": true,
   "dependencies": {
