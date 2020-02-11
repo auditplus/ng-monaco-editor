@@ -9,7 +9,8 @@ import {
   Inject,
   NgZone,
   Input,
-  OnDestroy
+  OnDestroy,
+  HostListener
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
@@ -50,6 +51,10 @@ export class MonacoEditorComponent implements OnInit, ControlValueAccessor, OnDe
 
   @Output() loaded: EventEmitter<any> = new EventEmitter<any>();
 
+  @Output() focusEvent: EventEmitter<Event> = new EventEmitter<Event>();
+
+  @Output() blurEvent: EventEmitter<Event> = new EventEmitter<Event>();
+
   onChanged = (_: any) => {};
 
   onTouched = () => {};
@@ -72,6 +77,14 @@ export class MonacoEditorComponent implements OnInit, ControlValueAccessor, OnDe
     @Inject(MONACO_EDITOR_CONFIG) private config: MonacoEditorConfig,
     @Inject(MONACO_EDITOR_STATE) private editorState: MonacoEditorState
   ) { }
+
+  @HostListener('focusin', ['$event']) onFocusin(event: Event) {
+    this.focusEvent.emit(event);
+  }
+
+  @HostListener('focusout', ['$event']) onFocusout(event: Event) {
+    this.blurEvent.emit(event);
+  }
 
   ngOnInit() {
     this.editorState.loadedMonaco.then(() => {
