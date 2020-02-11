@@ -1,8 +1,21 @@
-import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter, forwardRef, Inject, NgZone, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  Output,
+  EventEmitter,
+  forwardRef,
+  Inject,
+  NgZone,
+  Input,
+  OnDestroy
+} from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 import { MonacoEditorConfig, MONACO_EDITOR_CONFIG } from './config';
 import { MONACO_EDITOR_STATE, MonacoEditorState } from './editor-state';
+import { Subscription, fromEvent } from 'rxjs';
 
 @Component({
   selector: 'ng-monaco-editor',
@@ -23,13 +36,15 @@ import { MONACO_EDITOR_STATE, MonacoEditorState } from './editor-state';
     multi: true
   }]
 })
-export class MonacoEditorComponent implements OnInit, ControlValueAccessor {
+export class MonacoEditorComponent implements OnInit, ControlValueAccessor, OnDestroy {
 
   value = '';
 
   private editor: any;
 
   private editorOptions: any;
+
+  private windowResizeSubscription: Subscription;
 
   @ViewChild('container', {static: true}) editorContainer: ElementRef;
 
@@ -108,7 +123,22 @@ export class MonacoEditorComponent implements OnInit, ControlValueAccessor {
       this.onTouched();
     });
 
+    if (this.windowResizeSubscription) {
+      this.windowResizeSubscription.unsubscribe();
+    }
+    this.windowResizeSubscription = fromEvent(window, 'resize').subscribe(() => this.editor.layout());
+
     this.loaded.emit(this.editor);
+  }
+
+  ngOnDestroy() {
+    if (this.windowResizeSubscription) {
+      this.windowResizeSubscription.unsubscribe();
+    }
+    if (this.editor) {
+      this.editor.dispose();
+      this.editor = undefined;
+    }
   }
 
 }
